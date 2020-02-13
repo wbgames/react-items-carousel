@@ -32,8 +32,6 @@ const SliderItemsWrapper = styled.div`
 const SliderItem = styled.div`
   width: ${(props) => props.width}px;
   flex-shrink: 0;
-  margin-right: ${(props) => props.rightGutter}px;
-  margin-left: ${(props) => props.leftGutter}px;
 `;
 
 const CarouselChevron = styled.div`
@@ -94,7 +92,7 @@ class ItemsCarouselBase extends React.Component {
     }
   };
 
-  renderList({ items, translateX, containerWidth, measureRef }) {
+  renderList({ items, translateX, containerWidth, measureRef, manualWidth }) {
     const {
       gutter,
       numberOfCards,
@@ -119,24 +117,26 @@ class ItemsCarouselBase extends React.Component {
             <SliderItem
               key={index}
               className={classes.itemWrapper}
-              width={calculateItemWidth({
+              width={manualWidth || calculateItemWidth({
                 firstAndLastGutter,
                 containerWidth,
                 gutter,
                 numberOfCards,
                 showSlither,
               })}
-              leftGutter={calculateItemLeftGutter({
-                index,
-                firstAndLastGutter,
-                gutter,
-              })}
-              rightGutter={calculateItemRightGutter({
-                index,
-                firstAndLastGutter,
-                gutter,
-                numberOfChildren: items.length,
-              })}
+              style={{
+                marginLeft: calculateItemLeftGutter({
+                  index,
+                  firstAndLastGutter,
+                  gutter,
+                }),
+                marginRight: calculateItemRightGutter({
+                  index,
+                  firstAndLastGutter,
+                  gutter,
+                  numberOfChildren: items.length,
+                }),
+              }}
             >
               {child}
             </SliderItem>
@@ -175,6 +175,7 @@ class ItemsCarouselBase extends React.Component {
       activeItemTranslateX,
       nextItemIndex,
       previousItemIndex,
+      manualWidth
     } = this.props;
 
     const {
@@ -203,6 +204,7 @@ class ItemsCarouselBase extends React.Component {
             measureRef,
             containerWidth,
             translateX,
+            manualWidth,
           })}
         />
         {

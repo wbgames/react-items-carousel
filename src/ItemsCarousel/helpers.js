@@ -1,7 +1,7 @@
 import min from 'lodash.min';
 import max from 'lodash.max';
 
-export const getFirstAndLastItemGutter = ({ gutter }) =>  gutter * 2;
+export const getFirstAndLastItemGutter = ({ gutter }) =>  gutter;
 export const getSlither = ({ gutter }) => gutter;
 
 export const calculateItemWidth = ({
@@ -67,8 +67,9 @@ export const calculateLastPossibleTranslateX = ({
   gutter,
   firstAndLastGutter,
   showSlither,
+  manualWidth,
 }) => {
-  const itemWidth = calculateItemWidth({
+  const itemWidth = manualWidth || calculateItemWidth({
     containerWidth,
     gutter,
     numberOfCards,
@@ -96,6 +97,7 @@ export const calculateActiveItemTranslateX = ({
   firstAndLastGutter,
   showSlither,
   infiniteLoop,
+  manualWidth,
 }) => {
   let gotoIndex = activeItemIndex;
 
@@ -118,7 +120,7 @@ export const calculateActiveItemTranslateX = ({
   }
 
   // Last items to show
-  if(!infiniteLoop && gotoIndex > (numberOfChildren - numberOfCards - 1)) {
+  if(!infiniteLoop && gotoIndex > (numberOfChildren - numberOfCards)) {
     return calculateLastPossibleTranslateX({
       activeItemIndex: gotoIndex,
       activePosition,
@@ -128,10 +130,11 @@ export const calculateActiveItemTranslateX = ({
       gutter,
       firstAndLastGutter,
       showSlither,
+      manualWidth,
     });
   }
 
-  const itemWidth = calculateItemWidth({
+  const itemWidth = manualWidth || calculateItemWidth({
     containerWidth,
     gutter,
     numberOfCards,

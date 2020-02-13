@@ -23,7 +23,7 @@ export default {
   showSlither: PropTypes.bool,
 
   /**
-   * If true first and last items will have twice the space
+   * If true first and last items will have gutter.
    */
   firstAndLastGutter: PropTypes.bool,
 
@@ -136,4 +136,9 @@ export default {
    * Can be used change translateX on the spot
    */
   calculateActualTranslateX: PropTypes.func,
+
+  /**
+   * Used to specify fixed width manually
+   */
+  manualWidth: PropTypes.number,
 };

@@ -34,6 +34,7 @@ const getActiveItemTranslateX = ({
   gutter,
   firstAndLastGutter,
   showSlither,
+  manualWidth,
 }) => calculateActiveItemTranslateX({
   activeItemIndex,
   activePosition,
@@ -44,6 +45,7 @@ const getActiveItemTranslateX = ({
   firstAndLastGutter,
   showSlither,
   infiniteLoop: true,
+  manualWidth,
 });
 
 const getActualTranslateX = (items, currentTranslateX, {
@@ -63,6 +65,7 @@ const getActualTranslateX = (items, currentTranslateX, {
     gutter,
     firstAndLastGutter,
     showSlither,
+    manualWidth,
   });
 
   const leftShift = getActiveItemTranslateX({
@@ -74,6 +77,7 @@ const getActualTranslateX = (items, currentTranslateX, {
     gutter,
     firstAndLastGutter,
     showSlither,
+    manualWidth,
   });
 
 

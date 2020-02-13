@@ -16,6 +16,7 @@ const withCarouselValues = () => (Cpmt) => (props) => {
     gutter,
     firstAndLastGutter,
     showSlither,
+    manualWidth,
   } = props;
 
   const items = React.Children.toArray(children);
@@ -47,6 +48,7 @@ const withCarouselValues = () => (Cpmt) => (props) => {
         gutter,
         firstAndLastGutter,
         showSlither,
+        manualWidth,
       })}
     />
   );

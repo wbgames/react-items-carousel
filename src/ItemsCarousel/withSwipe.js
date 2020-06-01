@@ -8,22 +8,39 @@ const getFirstTouchClientX = (touches, defaultValue = 0) => {
   return defaultValue;
 };
 
+function captureClick(e) {
+  e.stopPropagation(); // Stop the click from being propagated.
+  window.removeEventListener('click', captureClick, true); // cleanup
+}
+
 export default () => (Cpmt) => {
   return class WithSwipe extends React.Component {
     state = {
-      startTouchX: 0,
-      currentTouchX: 0,
+      startTouchX: null,
+      currentTouchX: null,
     };
+
+    start = clientX => {
+      this.setState({
+        startTouchX: clientX,
+        currentTouchX: clientX
+      });
+    }
 
     onWrapperTouchStart = e => {
-      const touchClientX = getFirstTouchClientX(e.touches);
-      this.setState({
-        startTouchX: touchClientX,
-        currentTouchX: touchClientX
-      });
+      this.start(getFirstTouchClientX(e.touches));
     };
 
-    onWrapperTouchEnd = e => {
+    onWrapperMouseDown = e => {
+      this.start(e.clientX);
+    };
+
+    // Returns true if a swipe happened.
+    end = clientX => {
+      if (this.state.startTouchX === null) {
+        return;
+      }
+
       const {
         containerWidth,
         gutter,
@@ -42,27 +59,51 @@ export default () => (Cpmt) => {
         showSlither,
       });
 
-      const touchClientX = getFirstTouchClientX(e.changedTouches);
-
-      const touchRelativeX = this.state.startTouchX - touchClientX;
+      const touchRelativeX = this.state.startTouchX - clientX;
 
       // When the user swipes to 0.25 of the next item
       const threshold = 0.25;
 
       const noOfItemsToSwipe = Math.floor(Math.abs(touchRelativeX)/(itemWidth + gutter/2) + (1 - threshold));
 
+      this.setState({ startTouchX: null, currentTouchX: null });
+
       if (noOfItemsToSwipe > 0) {
         requestToChangeActive(
           touchRelativeX < 0 ? activeItemIndex - noOfItemsToSwipe : activeItemIndex + noOfItemsToSwipe
         );
+        return true;
       }
 
-      this.setState({ startTouchX: 0, currentTouchX: 0 });
+      return false;
     };
 
-    onWrapperTouchMove = e => {
-      this.setState({ currentTouchX: getFirstTouchClientX(e.touches) });
+    onWrapperTouchEnd = e => {
+      this.end(getFirstTouchClientX(e.changedTouches));
     };
+
+    onWrapperMouseUp = e => {
+      if (this.end(e.clientX)) {
+        // See https://stackoverflow.com/a/20290312
+        // Prevent the next onclick from firing since we did a drag.
+        window.addEventListener('click', captureClick, true);
+      }
+    };
+
+    move = clientX => {
+      this.setState({ currentTouchX: clientX });
+    }
+
+    onWrapperTouchMove = e => {
+      this.move(getFirstTouchClientX(e.touches));
+    };
+
+    onWrapperMouseMove = e => {
+      if (this.state.startTouchX === null) {
+        return;
+      }
+      this.move(e.clientX);
+    }
 
     render() {
       const {
@@ -87,6 +128,9 @@ export default () => (Cpmt) => {
           onWrapperTouchStart={this.onWrapperTouchStart}
           onWrapperTouchEnd={this.onWrapperTouchEnd}
           onWrapperTouchMove={this.onWrapperTouchMove}
+          onWrapperMouseDown={this.onWrapperMouseDown}
+          onWrapperMouseUp={this.onWrapperMouseUp}
+          onWrapperMouseMove={this.onWrapperMouseMove}
           touchRelativeX={startTouchX - currentTouchX}
         />
       )

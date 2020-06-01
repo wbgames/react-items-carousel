@@ -156,6 +156,9 @@ class ItemsCarouselBase extends React.Component {
       onWrapperTouchStart,
       onWrapperTouchEnd,
       onWrapperTouchMove,
+      onWrapperMouseDown,
+      onWrapperMouseUp,
+      onWrapperMouseMove,
       // Props coming from user
       gutter,
       numberOfCards,
@@ -190,6 +193,10 @@ class ItemsCarouselBase extends React.Component {
         onTouchStart={onWrapperTouchStart}
         onTouchEnd={onWrapperTouchEnd}
         onTouchMove={onWrapperTouchMove}
+        onMouseDown={onWrapperMouseDown}
+        onMouseUp={onWrapperMouseUp}
+        onMouseLeave={onWrapperMouseUp}
+        onMouseMove={onWrapperMouseMove}
         className={classes.wrapper}
       >
         <Motion
@@ -238,6 +245,9 @@ ItemsCarouselBase.defaultProps = {
   onWrapperTouchStart: null,
   onWrapperTouchEnd: null,
   onWrapperTouchMove: null,
+  onWrapperMouseDown: null,
+  onWrapperMouseUp: null,
+  onWrapperMouseMove: null,
 };
 
 ItemsCarouselBase.propTypes = {
@@ -258,6 +268,9 @@ ItemsCarouselBase.propTypes = {
   onWrapperTouchStart: PropTypes.func,
   onWrapperTouchEnd: PropTypes.func,
   onWrapperTouchMove: PropTypes.func,
+  onWrapperMouseDown: PropTypes.func,
+  onWrapperMouseUp: PropTypes.func,
+  onWrapperMouseMove: PropTypes.func,
 };
 
 export default ItemsCarouselBase;
